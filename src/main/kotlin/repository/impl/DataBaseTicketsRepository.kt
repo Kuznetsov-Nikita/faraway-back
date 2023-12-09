@@ -28,11 +28,11 @@ class DataBaseTicketsRepository: TicketsRepository {
                 .find { (RoutesTable.origin eq fromId) and (RoutesTable.destination eq toId) }
                 .map { it.id.value }
             val flightIds = if (date.isNullOrEmpty()) {
-                FlightEntity
-                    .find { (FlightsTable.route inList routeIds) and (FlightsTable.depTime like "$date%") }
-                    .map { it.id.value }
-            } else {
                 FlightEntity.find { FlightsTable.route inList routeIds }.map { it.id.value }
+            } else {
+                FlightEntity
+                    .find { (FlightsTable.route inList routeIds) and (FlightsTable.depTime like "$date%")  }
+                    .map { it.id.value }
             }
             val entities = TicketEntity.find { (TicketsTable.flight inList flightIds) and (TicketsTable.owner eq null) }
             entities.map { it.toTicket() }
