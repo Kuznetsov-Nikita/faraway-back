@@ -19,8 +19,8 @@ class DataBaseTicketsRepository: TicketsRepository {
             val fromId: Long
             val toId: Long
             try {
-                fromId = AirportEntity.find { AirportsTable.name eq from }.first().id.value
-                toId = AirportEntity.find { AirportsTable.name eq to }.first().id.value
+                fromId = AirportEntity.find { AirportsTable.city eq from }.first().id.value
+                toId = AirportEntity.find { AirportsTable.city eq to }.first().id.value
             } catch (e: NoSuchElementException) {
                 return@transaction null
             }
