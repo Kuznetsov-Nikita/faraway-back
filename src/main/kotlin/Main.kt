@@ -6,6 +6,7 @@ import com.typesafe.config.ConfigFactory
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.*
+import io.ktor.server.plugins.cors.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.engine.*
@@ -21,6 +22,11 @@ import repository.model.*
 
 fun main(args: Array<String>) {
     embeddedServer(Netty, port = 8080) {
+        install(CORS) {
+            allowMethod(HttpMethod.Options)
+            allowMethod(HttpMethod.Post)
+            allowHost("localhost:3000")
+        }
         configureDatabase()
         configureServer()
         authApi()

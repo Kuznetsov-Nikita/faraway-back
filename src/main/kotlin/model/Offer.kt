@@ -9,4 +9,5 @@ data class Offer(
     val photoUrl: String,
     val departureDate: String,
     val arrivalDate: String,
+    val price: Double
 )
