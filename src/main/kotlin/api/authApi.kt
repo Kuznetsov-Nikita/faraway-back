@@ -2,8 +2,10 @@ package api
 
 import api.model.LoginRequest
 import api.model.RegisterRequest
+import api.model.CustomerRequest
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -22,7 +24,7 @@ fun Application.authApi() {
             val request = call.receive<RegisterRequest>()
 
             try {
-                if (usersRepository.addUser(
+                val userInfo = usersRepository.addUser(
                     request.firstName,
                     request.lastName,
                     request.email,
@@ -30,8 +32,10 @@ fun Application.authApi() {
                     request.city,
                     request.country,
                     request.phone,
-                )) {
-                    call.respond(HttpStatusCode.OK)
+                )
+
+                if (userInfo != null) {
+                    call.respond(userInfo)
                 } else {
                     call.respond(HttpStatusCode.Conflict)
                 }
@@ -54,6 +58,27 @@ fun Application.authApi() {
                 }
             } catch (e: ExposedSQLException) {
                 call.respond(HttpStatusCode.InternalServerError)
+            }
+        }
+
+        authenticate("access") {
+            patch("/customer") {
+                val request = call.receive<CustomerRequest>()
+
+                try {
+                    val userInfo = usersRepository.update(
+                        request.id,
+                        request.firstName,
+                        request.lastName,
+                        request.email,
+                        request.city,
+                        request.country,
+                        request.phone,
+                    )
+                    call.respond(userInfo)
+                } catch (e: ExposedSQLException) {
+                    call.respond(HttpStatusCode.InternalServerError)
+                }
             }
         }
 

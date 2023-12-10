@@ -1,14 +1,14 @@
-package api.model
+package model
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegisterRequest(
+data class UserInfo(
+    val id: Long,
     val firstName: String,
     val lastName: String,
     val email: String,
-    val password: String,
+    val phone: String?,
     val city: String,
     val country: String,
-    val phone: String? = null,
 )
