@@ -76,9 +76,7 @@ fun Application.farawayApi() {
         get("/search") {
             val from = getUrlParameter("from")
             val to = getUrlParameter("to")
-            if (from == null || to == null ||
-                !from.matches(Regex("^[A-Z]{3}")) ||
-                !to.matches(Regex("^[A-Z]{3}"))) {
+            if (from == null || to == null) {
                 call.respond(HttpStatusCode.BadRequest
                     .description("invalid origin or destination airport code"))
                 return@get
