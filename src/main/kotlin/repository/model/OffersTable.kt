@@ -8,4 +8,5 @@ object OffersTable: LongIdTable("offers") {
     val photoUrl: Column<String> = varchar("photo_url", length = 500)
     val departureDate: Column<String> = varchar("departure_date", length = 10)
     val arrivalDate: Column<String> = varchar("arrival_date", length = 10)
+    val price: Column<Double> = double("price")
 }

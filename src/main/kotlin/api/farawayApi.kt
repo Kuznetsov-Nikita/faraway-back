@@ -76,9 +76,7 @@ fun Application.farawayApi() {
         get("/search") {
             val from = getUrlParameter("from")
             val to = getUrlParameter("to")
-            if (from == null || to == null ||
-                !from.matches(Regex("^[A-Z]{3}")) ||
-                !to.matches(Regex("^[A-Z]{3}"))) {
+            if (from == null || to == null) {
                 call.respond(HttpStatusCode.BadRequest
                     .description("invalid origin or destination airport code"))
                 return@get
@@ -86,13 +84,8 @@ fun Application.farawayApi() {
             val date = getUrlParameter("date")
 
             try {
-                val tickets = ticketsRepository.search(from, to, date)
-                if (tickets == null) {
-                    call.respond(HttpStatusCode.NotFound
-                        .description("invalid origin or destination airport code"))
-                } else {
-                    call.respond(tickets)
-                }
+                val tickets = ticketsRepository.search(from.uppercase(), to.uppercase(), date)
+                call.respond(tickets)
             } catch (e: ExposedSQLException) {
                 call.respond(HttpStatusCode.InternalServerError)
             }

@@ -14,7 +14,7 @@ class DataBaseTicketsRepository: TicketsRepository {
         }
     }
 
-    override fun search(from: String, to: String, date: String?): Collection<Ticket>? {
+    override fun search(from: String, to: String, date: String?): Collection<Ticket> {
         return transaction {
             val fromId: Long
             val toId: Long
@@ -22,7 +22,7 @@ class DataBaseTicketsRepository: TicketsRepository {
                 fromId = AirportEntity.find { AirportsTable.city eq from }.first().id.value
                 toId = AirportEntity.find { AirportsTable.city eq to }.first().id.value
             } catch (e: NoSuchElementException) {
-                return@transaction null
+                return@transaction listOf<Ticket>()
             }
             val routeIds = RouteEntity
                 .find { (RoutesTable.origin eq fromId) and (RoutesTable.destination eq toId) }

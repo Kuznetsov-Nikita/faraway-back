@@ -11,4 +11,5 @@ class OfferEntity(id: EntityID<Long>): LongEntity(id) {
     val photoUrl by OffersTable.photoUrl
     val departureDate by OffersTable.departureDate
     val arrivalDate by OffersTable.arrivalDate
+    val price by OffersTable.price
 }

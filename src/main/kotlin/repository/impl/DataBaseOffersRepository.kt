@@ -20,7 +20,8 @@ class DataBaseOffersRepository: OffersRepository {
             city = city,
             photoUrl = photoUrl,
             departureDate = departureDate,
-            arrivalDate = arrivalDate
+            arrivalDate = arrivalDate,
+            price = price
         )
     }
 }
