@@ -23,6 +23,8 @@ import repository.model.*
 fun main(args: Array<String>) {
     embeddedServer(Netty, port = 8080) {
         install(CORS) {
+            allowMethod(HttpMethod.Options)
+            allowMethod(HttpMethod.Post)
             allowHost("localhost:3000")
         }
         configureDatabase()
