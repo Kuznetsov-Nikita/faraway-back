@@ -1,6 +1,7 @@
 package repository
 
 import model.User
+import model.UserInfo
 
 interface UsersRepository {
     fun addUser(
@@ -11,7 +12,17 @@ interface UsersRepository {
         city: String,
         country: String,
         phone: String? = null,
-    ): Boolean
+    ): UserInfo?
 
     fun getByEmail(email: String): User?
+
+    fun update(
+        id: Long,
+        firstName: String? = null,
+        lastName: String? = null,
+        email: String? = null,
+        city: String? = null,
+        country: String? = null,
+        phone: String? = null,
+    ): UserInfo
 }
