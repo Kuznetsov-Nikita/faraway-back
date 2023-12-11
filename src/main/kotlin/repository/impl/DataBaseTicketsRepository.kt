@@ -14,7 +14,7 @@ class DataBaseTicketsRepository: TicketsRepository {
         }
     }
 
-    override fun search(from: String, to: String, date: String?): Collection<Ticket> {
+    override fun search(from: String, to: String, date: String?, seatClass: String?): Collection<Ticket> {
         return transaction {
             val fromId: Long
             val toId: Long
@@ -24,9 +24,11 @@ class DataBaseTicketsRepository: TicketsRepository {
             } catch (e: NoSuchElementException) {
                 return@transaction listOf<Ticket>()
             }
+
             val routeIds = RouteEntity
                 .find { (RoutesTable.origin eq fromId) and (RoutesTable.destination eq toId) }
                 .map { it.id.value }
+
             val flightIds = if (date.isNullOrEmpty()) {
                 FlightEntity.find { FlightsTable.route inList routeIds }.map { it.id.value }
             } else {
@@ -34,7 +36,16 @@ class DataBaseTicketsRepository: TicketsRepository {
                     .find { (FlightsTable.route inList routeIds) and (FlightsTable.depTime like "$date%")  }
                     .map { it.id.value }
             }
-            val entities = TicketEntity.find { (TicketsTable.flight inList flightIds) and (TicketsTable.owner eq null) }
+
+            val entities = if (seatClass != null) {
+                TicketEntity.find {
+                    (TicketsTable.flight inList flightIds) and
+                    (TicketsTable.owner eq null) and
+                    (TicketsTable.seatClass eq seatClass)
+                }
+            } else {
+                TicketEntity.find { (TicketsTable.flight inList flightIds) and (TicketsTable.owner eq null) }
+            }
             entities.map { it.toTicket() }
         }
     }

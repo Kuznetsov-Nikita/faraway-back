@@ -19,13 +19,15 @@ fun Application.farawayApi() {
 
         get("/offers/{dep_city}") {
             val depCity = getPathParameter("dep_city")
-            if (depCity == null) {
-                call.respond(HttpStatusCode.BadRequest.description("invalid city of origin"))
-                return@get
-            }
+
+            // TODO: update logic for dep_city
+            //if (depCity == null) {
+            //    call.respond(HttpStatusCode.BadRequest.description("invalid city of origin"))
+            //    return@get
+            //}
 
             try {
-                val offers = offersRepository.getByCity(depCity)
+                val offers = offersRepository.getAll()
                 call.respond(offers)
             } catch (e: ExposedSQLException) {
                 call.respond(HttpStatusCode.InternalServerError)
@@ -82,9 +84,10 @@ fun Application.farawayApi() {
                 return@get
             }
             val date = getUrlParameter("date")
+            val seatClass = getUrlParameter("class")
 
             try {
-                val tickets = ticketsRepository.search(from.uppercase(), to.uppercase(), date)
+                val tickets = ticketsRepository.search(from.uppercase(), to.uppercase(), date, seatClass?.uppercase())
                 call.respond(tickets)
             } catch (e: ExposedSQLException) {
                 call.respond(HttpStatusCode.InternalServerError)

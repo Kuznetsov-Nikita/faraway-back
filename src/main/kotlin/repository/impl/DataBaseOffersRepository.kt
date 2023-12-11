@@ -7,6 +7,12 @@ import repository.model.OfferEntity
 import repository.model.OffersTable
 
 class DataBaseOffersRepository: OffersRepository {
+    override fun getAll(): Collection<Offer> {
+        return transaction {
+            OfferEntity.all().map { it.toOffer() }
+        }
+    }
+
     override fun getByCity(departureCity: String): Collection<Offer> {
         return transaction {
             val entities = OfferEntity.find { OffersTable.city eq departureCity }
