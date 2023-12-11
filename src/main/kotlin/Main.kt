@@ -25,7 +25,10 @@ fun main(args: Array<String>) {
         install(CORS) {
             allowMethod(HttpMethod.Options)
             allowMethod(HttpMethod.Post)
+            allowHeader(HttpHeaders.ContentType)
+            allowHeader(HttpHeaders.Authorization)
             allowHost("localhost:3000")
+            allowCredentials = true
         }
         configureDatabase()
         configureServer()
