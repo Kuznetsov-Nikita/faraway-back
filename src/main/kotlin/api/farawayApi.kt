@@ -5,6 +5,7 @@ import api.utils.getUrlParameter
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.jetbrains.exposed.exceptions.ExposedSQLException
@@ -42,6 +43,12 @@ fun Application.farawayApi() {
                     return@get
                 }
 
+                val principal = call.principal<JWTPrincipal>()
+                val claimUserId = principal!!.payload.getClaim("userId").asLong()
+                if (userId != claimUserId) {
+                    call.respond(HttpStatusCode.Forbidden)
+                }
+
                 try {
                     val tickets = ticketsRepository.getByUser(userId)
                     call.respond(tickets)
@@ -60,6 +67,12 @@ fun Application.farawayApi() {
                 if (userId == null) {
                     call.respond(HttpStatusCode.BadRequest.description("invalid user id"))
                     return@post
+                }
+
+                val principal = call.principal<JWTPrincipal>()
+                val claimUserId = principal!!.payload.getClaim("userId").asLong()
+                if (userId != claimUserId) {
+                    call.respond(HttpStatusCode.Forbidden)
                 }
 
                 try {
