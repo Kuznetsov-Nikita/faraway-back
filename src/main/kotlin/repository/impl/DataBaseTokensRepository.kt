@@ -27,6 +27,7 @@ class DataBaseTokensRepository: TokensRepository {
         val accessToken = JWT.create()
             .withSubject(userId.toString())
             .withExpiresAt(Date(currentTime + Duration.ofMinutes(accessLifeTime).toMillis()))
+            .withClaim("userId", userId)
             .withIssuer(issuer)
             .sign(algorithm)
 

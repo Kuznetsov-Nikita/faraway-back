@@ -58,7 +58,8 @@ fun Application.configureServer() {
             }
 
             validate { token ->
-                if (token.payload.expiresAt.time > System.currentTimeMillis()) {
+                val claim = token.payload.getClaim("userId")
+                if (token.payload.expiresAt.time > System.currentTimeMillis() && !claim.isMissing && !claim.isNull) {
                     JWTPrincipal(token.payload)
                 } else {
                     null
